@@ -169,12 +169,12 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             sender.sendMessage(mm.deserialize("<light_purple>Verfügbare Items: <white>dagger, drill, berserker, thor, spear, phasemace, scythe"));
             return true;
         }
-        ItemStack item = buildItem(args[0]);
+        ItemStack item = buildItem(args);
         if (item == null) {
             sender.sendMessage(mm.deserialize("<red>Unbekanntes Item! Nutze: dagger, drill, berserker, thor, spear, phasemace, scythe"));
             return true;
         }
-        Player target = (args.length >= 2) ? Bukkit.getPlayer(args[1]) : (sender instanceof Player p ? p : null);
+        Player target = (args.length >= 2) ? Bukkit.getPlayer(args) : (sender instanceof Player p ? p : null);
         if (target == null) {
             sender.sendMessage(mm.deserialize("<red>Spieler nicht gefunden!"));
             return true;
@@ -219,7 +219,7 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
                 targetLoc.setYaw(start.getYaw());
                 targetLoc.setPitch(start.getPitch());
                 p.getWorld().spawnParticle(Particle.PORTAL, start.clone().add(0, 1, 0), 40, 0.4, 0.5, 0.4, 0.15);
-                p.teleport(targetLoc);
+                p.teleportAsync(targetLoc);
                 p.getWorld().spawnParticle(Particle.PORTAL, targetLoc.clone().add(0, 1, 0), 40, 0.4, 0.5, 0.4, 0.15);
                 p.playSound(targetLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1.2f);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 1));
