@@ -382,7 +382,7 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         double maxHp = entity.getAttribute(Attribute.MAX_HEALTH) != null ? entity.getAttribute(Attribute.MAX_HEALTH).getValue() : 20.0;
 
         boolean isBoss = (type == EntityType.WARDEN || type == EntityType.WITHER || type == EntityType.ENDER_DRAGON || maxHp >= 150.0);
-        if (isBoss) {
+        if (isBoss && java.util.concurrent.ThreadLocalRandom.current().nextDouble() < 0.10) {
             e.getDrops().add(buildItem("SCROLL"));
         }
     }
