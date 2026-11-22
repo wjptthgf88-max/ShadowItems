@@ -165,19 +165,27 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
     }
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (args.length < 1) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] rawArgs) {
+        List<String> args = Arrays.asList(rawArgs);
+        if (args.isEmpty()) {
             sender.sendMessage(mm.deserialize("<light_purple>Verfügbare Items: <white>dagger, drill, berserker, thor, spear, phasemace, scythe"));
             return true;
         }
-        ItemStack item = buildItem(args);
+        ItemStack item = buildItem(args.get(0));
         if (item == null) {
             sender.sendMessage(mm.deserialize("<red>Unbekanntes Item! Nutze: dagger, drill, berserker, thor, spear, phasemace, scythe"));
             return true;
         }
-        Player target = (args.length >= 2) ? Bukkit.getPlayer(args) : (sender instanceof Player p ? p : null);
+        Player target = (args.size() >= 2) ? Bukkit.getPlayer(args.get(1)) : (sender instanceof Player p ? p : null);
         if (target == null) {
             sender.sendMessage(mm.deserialize("<red>Spieler nicht gefunden!"));
             return true;
+        }
+        target.getInventory().addItem(item);
+        target.sendMessage(mm.deserialize("<light_purple>Du hast ein <bold>SHADOW ITEM</bold> <light_purple>erhalten!"));
+        return true;
+    }
         }
         target.getInventory().addItem(item);
         target.sendMessage(mm.deserialize("<light_purple>Du hast ein <bold>SHADOW ITEM</bold> <light_purple>erhalten!"));
