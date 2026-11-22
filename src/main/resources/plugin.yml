@@ -1,0 +1,9 @@
+name: ShadowItems
+version: 1.0
+main: de.shadowsmp.items.ShadowItems
+api-version: '1.21'
+commands:
+  shadowitems:
+    description: Gibt dir oder einem Spieler ein Shadow Custom Item
+    aliases: [si, sitem]
+    permission: shadowitems.give
