@@ -80,7 +80,6 @@ public class ShadowRecipes {
         scythe.setIngredient('N', Material.NETHERITE_BLOCK);
         scythe.setIngredient('X', Material.NETHER_STAR);
         Bukkit.addRecipe(scythe);
-
         // 8. SCHATTEN-BOGEN
         ShapedRecipe bow = new ShapedRecipe(new NamespacedKey(plugin, "recipe_bow"), plugin.buildItem("BOW"));
         bow.shape("CNC", "SBS", "CNC");
@@ -108,6 +107,7 @@ public class ShadowRecipes {
         gap.setIngredient('N', Material.NETHERITE_BLOCK);
         gap.setIngredient('S', Material.NETHER_STAR);
         Bukkit.addRecipe(gap);
+
         // 11. SCHATTEN-LEGGINGS
         ShapedRecipe leggings = new ShapedRecipe(new NamespacedKey(plugin, "recipe_leggings"), plugin.buildItem("LEGGINGS"));
         leggings.shape("CPC", "NLN", "ASA");
@@ -148,7 +148,6 @@ public class ShadowRecipes {
         crossbow.setIngredient('A', Material.AMETHYST_SHARD);
         crossbow.setIngredient('S', Material.SHULKER_SHELL);
         Bukkit.addRecipe(crossbow);
-
         // 15. PHASEN-HELM
         ShapedRecipe voidhelm = new ShapedRecipe(new NamespacedKey(plugin, "recipe_voidhelm"), plugin.buildItem("VOIDHELM"));
         voidhelm.shape("ENE", "CHC", "ASA");
@@ -203,4 +202,12 @@ public class ShadowRecipes {
         crown.setIngredient('1', new RecipeChoice.ExactChoice(plugin.buildItem("SCYTHE")));
         crown.setIngredient('2', new RecipeChoice.ExactChoice(plugin.buildItem("GAP")));
         crown.setIngredient('3', new RecipeChoice.ExactChoice(plugin.buildItem("VAMPIRE")));
-        crown.setIngredient('4', new RecipeChoice.ExactChoice(plugin.
+        crown.setIngredient('4', new RecipeChoice.ExactChoice(plugin.buildItem("BERSERKER")));
+        crown.setIngredient('5', new RecipeChoice.ExactChoice(plugin.buildItem("THOR")));
+        crown.setIngredient('6', new RecipeChoice.ExactChoice(plugin.buildItem("UNDYING")));
+        crown.setIngredient('7', new RecipeChoice.ExactChoice(plugin.buildItem("DAGGER")));
+        crown.setIngredient('8', new RecipeChoice.ExactChoice(plugin.buildItem("SPEAR")));
+        crown.setIngredient('9', new RecipeChoice.ExactChoice(plugin.buildItem("PHASEMACE")));
+        Bukkit.addRecipe(crown);
+    }
+}
