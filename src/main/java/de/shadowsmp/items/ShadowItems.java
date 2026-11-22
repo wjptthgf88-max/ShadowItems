@@ -50,8 +50,16 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
     private final Map<UUID, Long> noFallDamageUntil = new HashMap<>();
     private final Map<UUID, Integer> scytheHits = new HashMap<>();
     private final Set<UUID> drillingPlayers = new HashSet<>();
+    private final Map<UUID, Set<String>> unlockedRecipes = new HashMap<>();
     private boolean crownCrafted = false;
     private File dataFile;
+
+    private static final List<String> ALL_RECIPE_IDS = List.of(
+            "recipe_dagger", "recipe_drill", "recipe_berserker", "recipe_thor", "recipe_spear",
+            "recipe_phasemace", "recipe_scythe", "recipe_bow", "recipe_boots", "recipe_gap",
+            "recipe_leggings", "recipe_shield", "recipe_vampire", "recipe_crossbow", "recipe_voidhelm",
+            "recipe_axe", "recipe_pearl", "recipe_undying", "recipe_staff", "recipe_crown"
+    );
 
     @Override
     public void onEnable() {
@@ -112,18 +120,17 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        e.getPlayer().undiscoverRecipes(List.of(
-                new NamespacedKey(this, "recipe_dagger"), new NamespacedKey(this, "recipe_drill"),
-                new NamespacedKey(this, "recipe_berserker"), new NamespacedKey(this, "recipe_thor"),
-                new NamespacedKey(this, "recipe_spear"), new NamespacedKey(this, "recipe_phasemace"),
-                new NamespacedKey(this, "recipe_scythe"), new NamespacedKey(this, "recipe_bow"),
-                new NamespacedKey(this, "recipe_boots"), new NamespacedKey(this, "recipe_gap"),
-                new NamespacedKey(this, "recipe_leggings"), new NamespacedKey(this, "recipe_shield"),
-                new NamespacedKey(this, "recipe_vampire"), new NamespacedKey(this, "recipe_crossbow"),
-                new NamespacedKey(this, "recipe_voidhelm"), new NamespacedKey(this, "recipe_axe"),
-                new NamespacedKey(this, "recipe_pearl"), new NamespacedKey(this, "recipe_undying"),
-                new NamespacedKey(this, "recipe_staff"), new NamespacedKey(this, "recipe_crown")
-        ));
+        Player p = e.getPlayer();
+        Set<String> unlocked = unlockedRecipes.getOrDefault(p.getUniqueId(), Set.of());
+        List<NamespacedKey> toHide = new ArrayList<>();
+        List<NamespacedKey> toShow = new ArrayList<>();
+        for (String rec : ALL_RECIPE_IDS) {
+            NamespacedKey key = new NamespacedKey(this, rec);
+            if (unlocked.contains(rec)) toShow.add(key);
+            else toHide.add(key);
+        }
+        p.undiscoverRecipes(toHide);
+        p.discoverRecipes(toShow);
     }
 
     private boolean checkCooldown(Player p, String ability, int seconds) {
@@ -281,6 +288,9 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             case "STAFF" -> createItem(Material.BLAZE_ROD, 2020, "STAFF",
                     "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-STAB</bold></gradient>",
                     List.of("<gray>Rechtsklick: <light_purple>Feuert einen tödlichen Wither-Schädel", "<dark_gray>Unzerstörbar | Cooldown: 9s | CMD: 2020"));
+            case "SCROLL" -> createItem(Material.MOJANG_BANNER_PATTERN, 2021, "SCROLL",
+                    "<gradient:#ffd166:#9d4edd><bold>ALTE SCHATTEN-SCHRIFTROLLE</bold></gradient>",
+                    List.of("<gray>Rechtsklick: <light_purple>Enthüllt 1 zufälliges geheimes Rezept", "<gray>im grünen Rezeptbuch!", "<dark_gray>Einmalig verbrauchbar | CMD: 2021"));
             case "CROWN" -> {
                 ItemStack item = createItem(Material.GOLDEN_HELMET, 2010, "CROWN",
                         "<gradient:#ffd166:#9d4edd><bold>★ DIE SCHATTEN-KRONE ★</bold></gradient>",
@@ -323,7 +333,7 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         meta.setUnbreakable(true);
         meta.addEnchant(Enchantment.UNBREAKING, 3, true);
         meta.addEnchant(Enchantment.MENDING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         meta.getPersistentDataContainer().set(itemKey, PersistentDataType.STRING, id);
         item.setItemMeta(meta);
         return item;
@@ -332,7 +342,7 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] rawArgs) {
         List<String> args = Arrays.asList(rawArgs);
         if (args.isEmpty()) {
-            sender.sendMessage(mm.deserialize("<light_purple>Items: <white>dagger, drill, berserker, thor, spear, phasemace, scythe, bow, boots, gap, leggings, shield, vampire, crossbow, voidhelm, axe, pearl, undying, staff, crown"));
+            sender.sendMessage(mm.deserialize("<light_purple>Items: <white>dagger, drill, berserker, thor, spear, phasemace, scythe, bow, boots, gap, leggings, shield, vampire, crossbow, voidhelm, axe, pearl, undying, staff, scroll, crown"));
             return true;
         }
         if (args.get(0).equalsIgnoreCase("resetcrown")) {
@@ -360,9 +370,21 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         if (args.length == 1) {
             return List.of("dagger", "drill", "berserker", "thor", "spear", "phasemace", "scythe", "bow", "boots",
-                    "gap", "leggings", "shield", "vampire", "crossbow", "voidhelm", "axe", "pearl", "undying", "staff", "crown", "resetcrown");
+                    "gap", "leggings", "shield", "vampire", "crossbow", "voidhelm", "axe", "pearl", "undying", "staff", "scroll", "crown", "resetcrown");
         }
         return null;
+    }
+
+    @EventHandler
+    public void onBossDeath(EntityDeathEvent e) {
+        LivingEntity entity = e.getEntity();
+        EntityType type = entity.getType();
+        double maxHp = entity.getAttribute(Attribute.MAX_HEALTH) != null ? entity.getAttribute(Attribute.MAX_HEALTH).getValue() : 20.0;
+
+        boolean isBoss = (type == EntityType.WARDEN || type == EntityType.WITHER || type == EntityType.ENDER_DRAGON || maxHp >= 150.0);
+        if (isBoss) {
+            e.getDrops().add(buildItem("SCROLL"));
+        }
     }
 
     @EventHandler
@@ -413,6 +435,27 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         if (id == null) return;
 
         switch (id) {
+            case "SCROLL" -> {
+                e.setCancelled(true);
+                Set<String> unlocked = unlockedRecipes.computeIfAbsent(p.getUniqueId(), k -> new HashSet<>());
+                List<String> locked = new ArrayList<>();
+                for (String rec : ALL_RECIPE_IDS) {
+                    if (!unlocked.contains(rec)) locked.add(rec);
+                }
+                if (locked.isEmpty()) {
+                    p.sendMessage(mm.deserialize("<gold>Du hast bereits alle geheimen Shadow-Rezepte freigeschaltet!"));
+                    return;
+                }
+                String chosen = locked.get(new Random().nextInt(locked.size()));
+                unlocked.add(chosen);
+                saveData();
+                p.discoverRecipe(new NamespacedKey(this, chosen));
+                handItem.setAmount(handItem.getAmount() - 1);
+                p.getWorld().spawnParticle(Particle.WITCH, p.getLocation().add(0, 1, 0), 50, 0.5, 0.8, 0.5, 0.15);
+                p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1.2f);
+                String cleanName = chosen.replace("recipe_", "").toUpperCase();
+                p.sendMessage(mm.deserialize("<dark_purple><bold>[SHADOW SMP]</bold> <light_purple>Du hast ein neues Rezept entschlüsselt: <gold><bold>" + cleanName + "</bold> <gray>(Schau in dein Rezeptbuch!)"));
+            }
             case "DAGGER" -> {
                 if (!checkCooldown(p, "DAGGER", 12)) return;
                 Location start = p.getLocation();
@@ -745,6 +788,9 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         dataFile = new File(getDataFolder(), "data.yml");
         YamlConfiguration cfg = new YamlConfiguration();
         cfg.set("crown-crafted", crownCrafted);
+        for (Map.Entry<UUID, Set<String>> entry : unlockedRecipes.entrySet()) {
+            cfg.set("unlocked." + entry.getKey().toString(), new ArrayList<>(entry.getValue()));
+        }
         try { cfg.save(dataFile); } catch (IOException ex) { ex.printStackTrace(); }
     }
 
@@ -753,5 +799,10 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         if (!dataFile.exists()) return;
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(dataFile);
         crownCrafted = cfg.getBoolean("crown-crafted", false);
+        if (cfg.isConfigurationSection("unlocked")) {
+            for (String uuidStr : cfg.getConfigurationSection("unlocked").getKeys(false)) {
+                unlockedRecipes.put(UUID.fromString(uuidStr), new HashSet<>(cfg.getStringList("unlocked." + uuidStr)));
+            }
+        }
     }
 }
