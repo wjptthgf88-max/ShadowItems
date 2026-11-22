@@ -83,29 +83,73 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
 
     public ItemStack buildItem(String id) {
         return switch (id.toUpperCase()) {
-            case "DAGGER" -> createItem(Material.NETHERITE_SWORD, 2001, "DAGGER",
-                    "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-DOLCH</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>8 Blöcke Schatten-Teleport", "<gray>+ 2s Speed II & Unsichtbarkeit", "<dark_gray>Unzerstörbar | Cooldown: 12s | CMD: 2001"));
-            case "DRILL" -> createItem(Material.NETHERITE_PICKAXE, 2002, "DRILL",
-                    "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-BOHRER</bold></gradient>",
-                    List.of("<gray>Passiv: <light_purple>Baut 3x3 Blöcke gleichzeitig ab", "<dark_gray>Unzerstörbar | CMD: 2002"));
-            case "BERSERKER" -> createItem(Material.NETHERITE_CHESTPLATE, 2003, "BERSERKER",
-                    "<gradient:#9d4edd:#e0aaff><bold>BERSERKER-BRUSTPLATTE</bold></gradient>",
-                    List.of("<gray>Passiv: <light_purple>Unter 5 Herzen -> Stärke II & Resistenz", "<dark_gray>Unzerstörbar | Cooldown: 20s | CMD: 2003"));
-            case "THOR" -> createItem(Material.MACE, 2004, "THOR",
-                    "<gradient:#9d4edd:#e0aaff><bold>THORS HAMMER</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>Ruft einen Blitzschlag herab", "<gray>& schleudert Gegner zurück", "<dark_gray>Unzerstörbar | Cooldown: 10s | CMD: 2004"));
-            case "SPEAR" -> createItem(Material.TRIDENT, 2005, "SPEAR",
-                    "<gradient:#9d4edd:#e0aaff><bold>SPÄHER-SPEER</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>Riptide-Dash nach vorne", "<gray>Verleiht <light_purple>No Fall Damage <gray>(30s)", "<dark_gray>Unzerstörbar | Cooldown: 6s | CMD: 2005"));
-            case "PHASEMACE" -> createItem(Material.MACE, 2006, "PHASEMACE",
-                    "<gradient:#9d4edd:#e0aaff><bold>PHASEN-MACE</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>Katapultiert dich 14 Blöcke hoch", "<gray>für einen tödlichen Mace-Smash", "<dark_gray>Unzerstörbar | Cooldown: 15s | CMD: 2006"));
-            case "SCYTHE" -> createItem(Material.NETHERITE_SWORD, 2007, "SCYTHE",
-                    "<gradient:#9d4edd:#e0aaff><bold>WARDEN-SENSE</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>Warden Sonic Boom (15 Blöcke)", "<gray>Passiv: <light_purple>Jeder 3. Schlag -> Regeneration & Darkness", "<dark_gray>Unzerstörbar | Cooldown: 14s | CMD: 2007"));
+            case "DAGGER" -> {
+                ItemStack item = createItem(Material.NETHERITE_SWORD, 2001, "DAGGER",
+                        "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-DOLCH</bold></gradient>",
+                        List.of("<gray>Rechtsklick: <light_purple>8 Blöcke Schatten-Teleport", "<gray>+ 2s Speed II & Unsichtbarkeit", "<dark_gray>Unzerstörbar | Cooldown: 12s | CMD: 2001"));
+                enchantSword(item);
+                yield item;
+            }
+            case "DRILL" -> {
+                ItemStack item = createItem(Material.NETHERITE_PICKAXE, 2002, "DRILL",
+                        "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-BOHRER</bold></gradient>",
+                        List.of("<gray>Passiv: <light_purple>Baut 3x3 Blöcke gleichzeitig ab", "<dark_gray>Unzerstörbar | CMD: 2002"));
+                item.addUnsafeEnchantment(Enchantment.EFFICIENCY, 5);
+                item.addUnsafeEnchantment(Enchantment.FORTUNE, 3);
+                yield item;
+            }
+            case "BERSERKER" -> {
+                ItemStack item = createItem(Material.NETHERITE_CHESTPLATE, 2003, "BERSERKER",
+                        "<gradient:#9d4edd:#e0aaff><bold>BERSERKER-BRUSTPLATTE</bold></gradient>",
+                        List.of("<gray>Passiv: <light_purple>Unter 5 Herzen -> Stärke II & Resistenz", "<dark_gray>Unzerstörbar | Cooldown: 20s | CMD: 2003"));
+                item.addUnsafeEnchantment(Enchantment.PROTECTION, 4);
+                item.addUnsafeEnchantment(Enchantment.THORNS, 3);
+                yield item;
+            }
+            case "THOR" -> {
+                ItemStack item = createItem(Material.MACE, 2004, "THOR",
+                        "<gradient:#9d4edd:#e0aaff><bold>THORS HAMMER</bold></gradient>",
+                        List.of("<gray>Rechtsklick: <light_purple>Ruft einen Blitzschlag herab", "<gray>& schleudert Gegner zurück", "<dark_gray>Unzerstörbar | Cooldown: 10s | CMD: 2004"));
+                enchantMace(item);
+                yield item;
+            }
+            case "SPEAR" -> {
+                ItemStack item = createItem(Material.TRIDENT, 2005, "SPEAR",
+                        "<gradient:#9d4edd:#e0aaff><bold>SPÄHER-SPEER</bold></gradient>",
+                        List.of("<gray>Rechtsklick: <light_purple>Riptide-Dash nach vorne", "<gray>Verleiht <light_purple>No Fall Damage <gray>(30s)", "<dark_gray>Unzerstörbar | Cooldown: 6s | CMD: 2005"));
+                item.addUnsafeEnchantment(Enchantment.IMPALING, 5);
+                yield item;
+            }
+            case "PHASEMACE" -> {
+                ItemStack item = createItem(Material.MACE, 2006, "PHASEMACE",
+                        "<gradient:#9d4edd:#e0aaff><bold>PHASEN-MACE</bold></gradient>",
+                        List.of("<gray>Rechtsklick: <light_purple>Katapultiert dich 14 Blöcke hoch", "<gray>für einen tödlichen Mace-Smash", "<dark_gray>Unzerstörbar | Cooldown: 15s | CMD: 2006"));
+                enchantMace(item);
+                yield item;
+            }
+            case "SCYTHE" -> {
+                ItemStack item = createItem(Material.NETHERITE_SWORD, 2007, "SCYTHE",
+                        "<gradient:#9d4edd:#e0aaff><bold>WARDEN-SENSE</bold></gradient>",
+                        List.of("<gray>Rechtsklick: <light_purple>Warden Sonic Boom (15 Blöcke)", "<gray>Passiv: <light_purple>Jeder 3. Schlag -> Regeneration & Darkness", "<dark_gray>Unzerstörbar | Cooldown: 14s | CMD: 2007"));
+                enchantSword(item);
+                yield item;
+            }
             default -> null;
         };
+    }
+
+    private void enchantSword(ItemStack item) {
+        item.addUnsafeEnchantment(Enchantment.SHARPNESS, 5);
+        item.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
+        item.addUnsafeEnchantment(Enchantment.LOOTING, 3);
+        item.addUnsafeEnchantment(Enchantment.SWEEPING_EDGE, 3);
+    }
+
+    private void enchantMace(ItemStack item) {
+        item.addUnsafeEnchantment(Enchantment.DENSITY, 5);
+        item.addUnsafeEnchantment(Enchantment.BREACH, 4);
+        item.addUnsafeEnchantment(Enchantment.WIND_BURST, 3);
+        item.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
     }
 
     private ItemStack createItem(Material mat, int cmd, String id, String name, List<String> loreLines) {
