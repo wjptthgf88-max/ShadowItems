@@ -110,7 +110,9 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
                 ItemStack item = createItem(Material.MACE, 2004, "THOR",
                         "<gradient:#9d4edd:#e0aaff><bold>THORS HAMMER</bold></gradient>",
                         List.of("<gray>Rechtsklick: <light_purple>Ruft einen Blitzschlag herab", "<gray>& schleudert Gegner zurück", "<dark_gray>Unzerstörbar | Cooldown: 10s | CMD: 2004"));
-                enchantMace(item);
+                item.addUnsafeEnchantment(Enchantment.BREACH, 4);
+                item.addUnsafeEnchantment(Enchantment.WIND_BURST, 3);
+                item.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
                 yield item;
             }
             case "SPEAR" -> {
@@ -124,7 +126,9 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
                 ItemStack item = createItem(Material.MACE, 2006, "PHASEMACE",
                         "<gradient:#9d4edd:#e0aaff><bold>PHASEN-MACE</bold></gradient>",
                         List.of("<gray>Rechtsklick: <light_purple>Katapultiert dich 14 Blöcke hoch", "<gray>für einen tödlichen Mace-Smash", "<dark_gray>Unzerstörbar | Cooldown: 15s | CMD: 2006"));
-                enchantMace(item);
+                item.addUnsafeEnchantment(Enchantment.DENSITY, 5);
+                item.addUnsafeEnchantment(Enchantment.WIND_BURST, 3);
+                item.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
                 yield item;
             }
             case "SCYTHE" -> {
@@ -143,13 +147,6 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         item.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
         item.addUnsafeEnchantment(Enchantment.LOOTING, 3);
         item.addUnsafeEnchantment(Enchantment.SWEEPING_EDGE, 3);
-    }
-
-    private void enchantMace(ItemStack item) {
-        item.addUnsafeEnchantment(Enchantment.DENSITY, 5);
-        item.addUnsafeEnchantment(Enchantment.BREACH, 4);
-        item.addUnsafeEnchantment(Enchantment.WIND_BURST, 3);
-        item.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
     }
 
     private ItemStack createItem(Material mat, int cmd, String id, String name, List<String> loreLines) {
