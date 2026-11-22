@@ -20,6 +20,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
@@ -362,6 +363,25 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
                     "gap", "leggings", "shield", "vampire", "crossbow", "voidhelm", "axe", "pearl", "undying", "staff", "crown", "resetcrown");
         }
         return null;
+    }
+
+    @EventHandler
+    public void onPrepareCrownCraft(PrepareItemCraftEvent e) {
+        if (e.getRecipe() == null) return;
+        if (!"CROWN".equals(getItemId(e.getRecipe().getResult()))) return;
+
+        List<ItemStack> matrix = Arrays.asList(e.getInventory().getMatrix());
+        List<String> required = List.of("SCYTHE", "GAP", "VAMPIRE", "BERSERKER", "THOR", "UNDYING", "DAGGER", "SPEAR", "PHASEMACE");
+        if (matrix.size() < 9) {
+            e.getInventory().setResult(null);
+            return;
+        }
+        for (int i = 0; i < 9; i++) {
+            if (!required.get(i).equals(getItemId(matrix.get(i)))) {
+                e.getInventory().setResult(null);
+                return;
+            }
+        }
     }
 
     @EventHandler
