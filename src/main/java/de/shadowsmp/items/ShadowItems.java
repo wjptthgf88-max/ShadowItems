@@ -218,9 +218,9 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
                 }
                 targetLoc.setYaw(start.getYaw());
                 targetLoc.setPitch(start.getPitch());
-                p.getWorld().spawnParticle(Particle.DRAGON_BREATH, start.clone().add(0, 1, 0), 30, 0.4, 0.5, 0.4, 0.05);
+                p.getWorld().spawnParticle(Particle.PORTAL, start.clone().add(0, 1, 0), 40, 0.4, 0.5, 0.4, 0.15);
                 p.teleport(targetLoc);
-                p.getWorld().spawnParticle(Particle.DRAGON_BREATH, targetLoc.clone().add(0, 1, 0), 30, 0.4, 0.5, 0.4, 0.05);
+                p.getWorld().spawnParticle(Particle.PORTAL, targetLoc.clone().add(0, 1, 0), 40, 0.4, 0.5, 0.4, 0.15);
                 p.playSound(targetLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1.2f);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 1));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 60, 0));
@@ -253,7 +253,7 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             case "PHASEMACE" -> {
                 if (!checkCooldown(p, "PHASEMACE", 15)) return;
                 p.setVelocity(new Vector(0, 1.45, 0));
-                p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation(), 40, 0.6, 0.2, 0.6, 0.08);
+                p.getWorld().spawnParticle(Particle.PORTAL, p.getLocation(), 40, 0.6, 0.2, 0.6, 0.15);
                 p.playSound(p.getLocation(), Sound.ENTITY_WIND_CHARGE_WIND_BURST, 1.2f, 0.8f);
             }
             case "SCYTHE" -> {
