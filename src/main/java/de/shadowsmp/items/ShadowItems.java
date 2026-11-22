@@ -128,12 +128,12 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             sender.sendMessage(mm.deserialize("<light_purple>Verfügbare Items: <white>dagger, drill, berserker, thor, spear, phasemace, scythe"));
             return true;
         }
-        ItemStack item = buildItem(args);
+        ItemStack item = buildItem(args[0]);
         if (item == null) {
             sender.sendMessage(mm.deserialize("<red>Unbekanntes Item! Nutze: dagger, drill, berserker, thor, spear, phasemace, scythe"));
             return true;
         }
-        Player target = (args.length >= 2) ? Bukkit.getPlayer(args) : (sender instanceof Player p ? p : null);
+        Player target = (args.length >= 2) ? Bukkit.getPlayer(args[1]) : (sender instanceof Player p ? p : null);
         if (target == null) {
             sender.sendMessage(mm.deserialize("<red>Spieler nicht gefunden!"));
             return true;
