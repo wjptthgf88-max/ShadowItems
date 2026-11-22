@@ -86,7 +86,7 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             case "DAGGER" -> {
                 ItemStack item = createItem(Material.NETHERITE_SWORD, 2001, "DAGGER",
                         "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-DOLCH</bold></gradient>",
-                        List.of("<gray>Rechtsklick: <light_purple>8 Blöcke Schatten-Teleport", "<gray>+ 2s Speed II & Unsichtbarkeit", "<dark_gray>Unzerstörbar | Cooldown: 12s | CMD: 2001"));
+                        List.of("<gray>Rechtsklick: <light_purple>8 Blöcke Schatten-Teleport", "<gray>+ 3s Speed II & Unsichtbarkeit", "<dark_gray>Unzerstörbar | Cooldown: 12s | CMD: 2001"));
                 enchantSword(item);
                 yield item;
             }
@@ -208,20 +208,25 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         switch (id) {
             case "DAGGER" -> {
                 if (!checkCooldown(p, "DAGGER", 12)) return;
-                Location loc = p.getLocation();
-                Vector dir = loc.getDirection().normalize();
-                Location targetLoc = loc.clone();
+                Location start = p.getLocation();
+                Vector dir = start.getDirection().normalize();
+                Location targetLoc = start.clone();
                 for (int i = 1; i <= 8; i++) {
-                    Location next = loc.clone().add(dir.clone().multiply(i));
-                    if (next.getBlock().getType().isSolid() || next.clone().add(0, 1, 0).getBlock().getType().isSolid()) break;
-                    targetLoc = next;
+                    Location foot = start.clone().add(dir.clone().multiply(i));
+                    Location head = foot.clone().add(0, 1, 0);
+                    if (foot.getBlock().getType().isOccluding() || head.getBlock().getType().isOccluding()) {
+                        break;
+                    }
+                    targetLoc = foot;
                 }
-                p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation().add(0, 1, 0), 30, 0.4, 0.5, 0.4, 0.05);
+                targetLoc.setYaw(start.getYaw());
+                targetLoc.setPitch(start.getPitch());
+                p.getWorld().spawnParticle(Particle.DRAGON_BREATH, start.clone().add(0, 1, 0), 30, 0.4, 0.5, 0.4, 0.05);
                 p.teleport(targetLoc);
-                p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation().add(0, 1, 0), 30, 0.4, 0.5, 0.4, 0.05);
-                p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1.2f);
-                p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 40, 1));
-                p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 40, 0));
+                p.getWorld().spawnParticle(Particle.DRAGON_BREATH, targetLoc.clone().add(0, 1, 0), 30, 0.4, 0.5, 0.4, 0.05);
+                p.playSound(targetLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1.2f);
+                p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 1));
+                p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 60, 0));
             }
             case "THOR" -> {
                 if (!checkCooldown(p, "THOR", 10)) return;
