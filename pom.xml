@@ -1,6 +1,6 @@
-<project xmlns="http://apache.org"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://w3.org"
-         xsi:schemaLocation="http://apache.org http://apache.org">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://apache.org">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.shadowsmp</groupId>
@@ -16,7 +16,7 @@
     <repositories>
         <repository>
             <id>papermc</id>
-            <url>https://papermc.io</url>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>26.3.build.227-stable</version>
+            <version>[26.3.build,)</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
