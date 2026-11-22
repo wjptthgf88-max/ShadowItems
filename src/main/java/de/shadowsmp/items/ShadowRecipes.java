@@ -3,7 +3,6 @@ package de.shadowsmp.items;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 
 public class ShadowRecipes {
@@ -199,15 +198,15 @@ public class ShadowRecipes {
         // 20. ★ DIE SCHATTEN-KRONE (AUS DEN 9 STÄRKSTEN ITEMS!) ★
         ShapedRecipe crown = new ShapedRecipe(new NamespacedKey(plugin, "recipe_crown"), plugin.buildItem("CROWN"));
         crown.shape("123", "456", "789");
-        crown.setIngredient('1', new RecipeChoice.ExactChoice(plugin.buildItem("SCYTHE")));
-        crown.setIngredient('2', new RecipeChoice.ExactChoice(plugin.buildItem("GAP")));
-        crown.setIngredient('3', new RecipeChoice.ExactChoice(plugin.buildItem("VAMPIRE")));
-        crown.setIngredient('4', new RecipeChoice.ExactChoice(plugin.buildItem("BERSERKER")));
-        crown.setIngredient('5', new RecipeChoice.ExactChoice(plugin.buildItem("THOR")));
-        crown.setIngredient('6', new RecipeChoice.ExactChoice(plugin.buildItem("UNDYING")));
-        crown.setIngredient('7', new RecipeChoice.ExactChoice(plugin.buildItem("DAGGER")));
-        crown.setIngredient('8', new RecipeChoice.ExactChoice(plugin.buildItem("SPEAR")));
-        crown.setIngredient('9', new RecipeChoice.ExactChoice(plugin.buildItem("PHASEMACE")));
+        crown.setIngredient('1', Material.NETHERITE_SWORD);
+        crown.setIngredient('2', Material.ENCHANTED_GOLDEN_APPLE);
+        crown.setIngredient('3', Material.NETHERITE_SWORD);
+        crown.setIngredient('4', Material.NETHERITE_CHESTPLATE);
+        crown.setIngredient('5', Material.MACE);
+        crown.setIngredient('6', Material.NETHERITE_LEGGINGS);
+        crown.setIngredient('7', Material.NETHERITE_SWORD);
+        crown.setIngredient('8', Material.TRIDENT);
+        crown.setIngredient('9', Material.MACE);
         Bukkit.addRecipe(crown);
     }
 }
