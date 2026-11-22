@@ -164,8 +164,6 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         return item;
     }
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] rawArgs) {
         List<String> args = Arrays.asList(rawArgs);
         if (args.isEmpty()) {
@@ -181,11 +179,6 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         if (target == null) {
             sender.sendMessage(mm.deserialize("<red>Spieler nicht gefunden!"));
             return true;
-        }
-        target.getInventory().addItem(item);
-        target.sendMessage(mm.deserialize("<light_purple>Du hast ein <bold>SHADOW ITEM</bold> <light_purple>erhalten!"));
-        return true;
-    }
         }
         target.getInventory().addItem(item);
         target.sendMessage(mm.deserialize("<light_purple>Du hast ein <bold>SHADOW ITEM</bold> <light_purple>erhalten!"));
