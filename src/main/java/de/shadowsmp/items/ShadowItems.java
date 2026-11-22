@@ -85,25 +85,25 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         return switch (id.toUpperCase()) {
             case "DAGGER" -> createItem(Material.NETHERITE_SWORD, 2001, "DAGGER",
                     "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-DOLCH</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>8 Blöcke Schatten-Teleport", "<gray>+ 2s Speed II & Unsichtbarkeit", "<dark_gray>Cooldown: 12s | CMD: 2001"));
+                    List.of("<gray>Rechtsklick: <light_purple>8 Blöcke Schatten-Teleport", "<gray>+ 2s Speed II & Unsichtbarkeit", "<dark_gray>Unzerstörbar | Cooldown: 12s | CMD: 2001"));
             case "DRILL" -> createItem(Material.NETHERITE_PICKAXE, 2002, "DRILL",
                     "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-BOHRER</bold></gradient>",
-                    List.of("<gray>Passiv: <light_purple>Baut 3x3 Blöcke gleichzeitig ab", "<dark_gray>CMD: 2002"));
+                    List.of("<gray>Passiv: <light_purple>Baut 3x3 Blöcke gleichzeitig ab", "<dark_gray>Unzerstörbar | CMD: 2002"));
             case "BERSERKER" -> createItem(Material.NETHERITE_CHESTPLATE, 2003, "BERSERKER",
                     "<gradient:#9d4edd:#e0aaff><bold>BERSERKER-BRUSTPLATTE</bold></gradient>",
-                    List.of("<gray>Passiv: <light_purple>Unter 5 Herzen -> Stärke II & Resistenz", "<dark_gray>Cooldown: 20s | CMD: 2003"));
+                    List.of("<gray>Passiv: <light_purple>Unter 5 Herzen -> Stärke II & Resistenz", "<dark_gray>Unzerstörbar | Cooldown: 20s | CMD: 2003"));
             case "THOR" -> createItem(Material.MACE, 2004, "THOR",
                     "<gradient:#9d4edd:#e0aaff><bold>THORS HAMMER</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>Ruft einen Blitzschlag herab", "<gray>& schleudert Gegner zurück", "<dark_gray>Cooldown: 10s | CMD: 2004"));
+                    List.of("<gray>Rechtsklick: <light_purple>Ruft einen Blitzschlag herab", "<gray>& schleudert Gegner zurück", "<dark_gray>Unzerstörbar | Cooldown: 10s | CMD: 2004"));
             case "SPEAR" -> createItem(Material.TRIDENT, 2005, "SPEAR",
                     "<gradient:#9d4edd:#e0aaff><bold>SPÄHER-SPEER</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>Riptide-Dash nach vorne", "<gray>Verleiht <light_purple>No Fall Damage <gray>(30s)", "<dark_gray>Cooldown: 6s | CMD: 2005"));
+                    List.of("<gray>Rechtsklick: <light_purple>Riptide-Dash nach vorne", "<gray>Verleiht <light_purple>No Fall Damage <gray>(30s)", "<dark_gray>Unzerstörbar | Cooldown: 6s | CMD: 2005"));
             case "PHASEMACE" -> createItem(Material.MACE, 2006, "PHASEMACE",
                     "<gradient:#9d4edd:#e0aaff><bold>PHASEN-MACE</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>Katapultiert dich 14 Blöcke hoch", "<gray>für einen tödlichen Mace-Smash", "<dark_gray>Cooldown: 15s | CMD: 2006"));
+                    List.of("<gray>Rechtsklick: <light_purple>Katapultiert dich 14 Blöcke hoch", "<gray>für einen tödlichen Mace-Smash", "<dark_gray>Unzerstörbar | Cooldown: 15s | CMD: 2006"));
             case "SCYTHE" -> createItem(Material.NETHERITE_SWORD, 2007, "SCYTHE",
                     "<gradient:#9d4edd:#e0aaff><bold>WARDEN-SENSE</bold></gradient>",
-                    List.of("<gray>Rechtsklick: <light_purple>Warden Sonic Boom (15 Blöcke)", "<gray>Passiv: <light_purple>Jeder 3. Schlag -> Regeneration & Darkness", "<dark_gray>Cooldown: 14s | CMD: 2007"));
+                    List.of("<gray>Rechtsklick: <light_purple>Warden Sonic Boom (15 Blöcke)", "<gray>Passiv: <light_purple>Jeder 3. Schlag -> Regeneration & Darkness", "<dark_gray>Unzerstörbar | Cooldown: 14s | CMD: 2007"));
             default -> null;
         };
     }
@@ -114,8 +114,10 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         meta.displayName(mm.deserialize(name));
         meta.lore(loreLines.stream().map(mm::deserialize).toList());
         meta.setCustomModelData(cmd);
+        meta.setUnbreakable(true);
         meta.addEnchant(Enchantment.UNBREAKING, 3, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.addEnchant(Enchantment.MENDING, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         meta.getPersistentDataContainer().set(itemKey, PersistentDataType.STRING, id);
         item.setItemMeta(meta);
         return item;
