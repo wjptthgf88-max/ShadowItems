@@ -229,8 +229,7 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             }
             case "GAP" -> createItem(Material.ENCHANTED_GOLDEN_APPLE, 2011, "GAP",
                     "<gradient:#ffd166:#9d4edd><bold>INFINITE SHADOW GAP</bold></gradient>",
-                    List.of("<gray>Essen: <light_purple>Wird nicht verbraucht!", "<gray>Regen III, Absorption IV & Resistenz II", "<dark_gray>Cooldown: 25s | CMD: 2011"));
-            case "LEGGINGS" -> {
+                    List.of("<gray>Essen: <light_purple>Wird nicht verbraucht!", "<gray>Regen III, Absorption IV & Resistenz II", "<dark_gray>Cooldown: 25s | CMD: 2011"));            case "LEGGINGS" -> {
                 ItemStack item = createItem(Material.NETHERITE_LEGGINGS, 2012, "LEGGINGS",
                         "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-LEGGINGS</bold></gradient>",
                         List.of("<gray>Sneak: <light_purple>4s Unsichtbarkeit & Speed II", "<dark_gray>Unzerstörbar | Cooldown: 15s | CMD: 2012"));
@@ -382,7 +381,7 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         double maxHp = entity.getAttribute(Attribute.MAX_HEALTH) != null ? entity.getAttribute(Attribute.MAX_HEALTH).getValue() : 20.0;
 
         boolean isBoss = (type == EntityType.WARDEN || type == EntityType.WITHER || type == EntityType.ENDER_DRAGON || maxHp >= 150.0);
-        if (isBoss && java.util.concurrent.ThreadLocalRandom.current().nextDouble() < 0.10) {
+        if (isBoss && java.util.concurrent.ThreadLocalRandom.current().nextDouble() < 0.01) {
             e.getDrops().add(buildItem("SCROLL"));
         }
     }
@@ -423,7 +422,6 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
         saveData();
         Bukkit.broadcast(mm.deserialize("<dark_purple><bold>[SHADOW SMP]</bold> <gold><bold>" + e.getWhoClicked().getName() + "</bold> <light_purple>hat soeben <gold><bold>DIE SCHATTEN-KRONE</bold> <light_purple>geschmiedet!"));
     }
-
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if (e.getHand() != EquipmentSlot.HAND) return;
@@ -575,6 +573,7 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             }
         }
     }
+
     @EventHandler
     public void onInfiniteGapConsume(PlayerItemConsumeEvent e) {
         if (!"GAP".equals(getItemId(e.getItem()))) return;
