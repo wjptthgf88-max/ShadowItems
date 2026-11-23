@@ -804,4 +804,44 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             }
         }
     }
+
+    @EventHandler
+    public void onFirstJoinRandomSpawn(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        if (!p.hasPlayedBefore()) {
+            randomTeleportPlayer(p);
+        }
+    }
+
+    @EventHandler
+    public void onRespawnRandomSpawn(PlayerRespawnEvent e) {
+        if (!e.isBedSpawn() && !e.isAnchorSpawn()) {
+            Player p = e.getPlayer();
+            p.getScheduler().runDelayed(this, task -> randomTeleportPlayer(p), null, 2L);
+        }
+    }
+
+    private void randomTeleportPlayer(Player p) {
+        World world = Bukkit.getWorlds().get(0);
+        int radius = 2000000;
+        java.util.concurrent.ThreadLocalRandom rng = java.util.concurrent.ThreadLocalRandom.current();
+
+        int x = rng.nextInt(-radius, radius + 1);
+        int z = rng.nextInt(-radius, radius + 1);
+
+        world.getChunkAtAsync(x >> 4, z >> 4).thenAccept(chunk -> {
+            int y = world.getHighestBlockYAt(x, z);
+            Block ground = world.getBlockAt(x, y, z);
+            if (ground.isLiquid() || ground.getType() == Material.CACTUS || ground.getType() == Material.MAGMA_BLOCK) {
+                randomTeleportPlayer(p);
+                return;
+            }
+            Location safeLoc = new Location(world, x + 0.5, y + 1.0, z + 0.5, rng.nextFloat() * 360f, 0f);
+            p.getScheduler().run(this, task -> {
+                p.teleportAsync(safeLoc).thenRun(() -> {
+                    p.sendActionBar(mm.deserialize("<light_purple>Zufälliger Startpunkt: <white>X: " + x + " | Z: " + z));
+                });
+            }, null);
+        });
+    }
 }
