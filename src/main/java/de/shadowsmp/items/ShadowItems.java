@@ -78,7 +78,6 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             }
         }, 20L, 40L);
     }
-
     private void applyArmorPassives(Player p) {
         boolean hasBoots = "BOOTS".equals(getItemId(p.getInventory().getBoots()));
         boolean hasVoidHelm = "VOIDHELM".equals(getItemId(p.getInventory().getHelmet()));
@@ -120,7 +119,16 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        syncPlayerRecipes(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onRespawnRecipes(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
+        p.getScheduler().runDelayed(this, task -> syncPlayerRecipes(p), null, 5L);
+    }
+
+    private void syncPlayerRecipes(Player p) {
         Set<String> unlocked = unlockedRecipes.getOrDefault(p.getUniqueId(), Set.of());
         List<NamespacedKey> toHide = new ArrayList<>();
         List<NamespacedKey> toShow = new ArrayList<>();
@@ -229,7 +237,8 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             }
             case "GAP" -> createItem(Material.ENCHANTED_GOLDEN_APPLE, 2011, "GAP",
                     "<gradient:#ffd166:#9d4edd><bold>INFINITE SHADOW GAP</bold></gradient>",
-                    List.of("<gray>Essen: <light_purple>Wird nicht verbraucht!", "<gray>Regen III, Absorption IV & Resistenz II", "<dark_gray>Cooldown: 25s | CMD: 2011"));            case "LEGGINGS" -> {
+                    List.of("<gray>Essen: <light_purple>Wird nicht verbraucht!", "<gray>Regen III, Absorption IV & Resistenz II", "<dark_gray>Cooldown: 25s | CMD: 2011"));
+            case "LEGGINGS" -> {
                 ItemStack item = createItem(Material.NETHERITE_LEGGINGS, 2012, "LEGGINGS",
                         "<gradient:#9d4edd:#e0aaff><bold>SCHATTEN-LEGGINGS</bold></gradient>",
                         List.of("<gray>Sneak: <light_purple>4s Unsichtbarkeit & Speed II", "<dark_gray>Unzerstörbar | Cooldown: 15s | CMD: 2012"));
@@ -573,7 +582,6 @@ public class ShadowItems extends JavaPlugin implements CommandExecutor, TabCompl
             }
         }
     }
-
     @EventHandler
     public void onInfiniteGapConsume(PlayerItemConsumeEvent e) {
         if (!"GAP".equals(getItemId(e.getItem()))) return;
